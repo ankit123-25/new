@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Location Tracker</title>
+</head>
+<body>
+    <h2>Tracking your live location...</h2>
+    <p id="output">Waiting for location...</p>
+    <button onclick="sendWhatsApp()">Send Location via WhatsApp</button>
+
+    <script>
+        let latitude, longitude;
+
+        function updateLocation(position) {
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+            document.getElementById("output").innerHTML = 
+                "Latitude: " + latitude + "<br>Longitude: " + longitude;
+        }
+
+        function showError(error) {
+            document.getElementById("output").innerHTML = "Error: " + error.message;
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(updateLocation, showError, {
+                enableHighAccuracy: true
+            });
+        } else {
+            document.getElementById("output").innerHTML = "Geolocation is not supported.";
+        }
+
+        function sendWhatsApp() {
+            if (latitude && longitude) {
+                let message = `My Live Location: https://www.google.com/maps?q=${latitude},${longitude}`;
+                let phoneNumber = "1234567890"; // Replace with the recipient's WhatsApp number (with country code)
+                let whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappLink, "_blank");
+            } else {
+                alert("Location not available yet.");
+            }
+        }
+    </script>
+</body>
+</html>
